@@ -1,0 +1,8 @@
+[package]
+name = "poeiter"
+version = "0.1.0"
+authors = ["valdron <seehofer.paul@gmail.com>"]
+
+[dependencies]
+timed_iterator = { git = "https://github.com/valdron/timed_iterator.git" }
+poefetcher = { git = "https://github.com/valdron/poe-fetcher.git" }
