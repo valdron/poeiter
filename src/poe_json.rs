@@ -4,7 +4,7 @@ use serde_json::Value;
 #[serde(deny_unknown_fields)]
 pub struct ApiSite {
     next_change_id: String,
-    stashes: Vec<ApiStash>
+    pub stashes: Vec<ApiStash>
 }
 
 #[derive(Serialize, Deserialize)]
@@ -19,7 +19,7 @@ pub struct ApiStash {
     stash: String,
     #[serde(rename = "stashType")]
     stash_type: String,
-    items: Vec<ApiItem>,
+    pub items: Vec<ApiItem>,
     public: bool
 }
 
@@ -30,11 +30,11 @@ pub struct ApiItem {
     verified: bool,
     w: u8,
     h: u8,
-    ilvl: u8,
+    pub ilvl: u8,
     icon: String,
     league: String,
     id: String,
-    sockets: Vec<Value>,
+    sockets: Vec<ApiSocket>,
     name: String,
     type_line: String,
     identified: bool,

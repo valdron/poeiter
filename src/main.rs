@@ -10,21 +10,23 @@ mod poe_json;
 
 use poe_json::ApiSite;
 
+use std::fs::File;
+use std::io::Write;
 use std::time::{Instant, Duration};
 use timed_iterator::TimeIter;
 use poefetcher::PoeFetcher;
 
 fn main() {
-    let fetcher = PoeFetcher::new("http://api.pathofexile.com/public-stash-tabs".parse().unwrap());
-    let res: Result<Vec<ApiSite>, _ > = fetcher.timed(Duration::from_millis(1000))
+    let fetcher = PoeFetcher::new("http://localhost:8000/public-stash-tabs".parse().unwrap());
+    let res: Vec<_> = fetcher.timed(Duration::from_millis(1000))
                             .enumerate()
                             .inspect(|&(ref i, ref site)| println!("Site {}: {:?}", i, site.change_id))
-                            .map(|(_, site)| serde_json::from_reader(site.body.as_slice()))
-                            .take(100)
+                            .map(|(_, site)| serde_json::from_reader::<&[u8],ApiSite>(site.body.as_slice()))
+                            .flat_map(| s | s.unwrap().stashes.into_iter())
+                            .flat_map(|stash| stash.items.into_iter())
+                            .take(10000)
+                            .filter(| i | i.ilvl == 84)
                             .collect(); 
-    match res {
-        Err(e) => println!("{:?}",e),
-        Ok(_) => println!("ran correctly"),
-    }
+    println!("len: {}", res.len());
     
 }
