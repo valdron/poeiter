@@ -1,4 +1,3 @@
-use serde_json::Value;
 
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]

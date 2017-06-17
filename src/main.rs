@@ -10,9 +10,7 @@ mod poe_json;
 
 use poe_json::ApiSite;
 
-use std::fs::File;
-use std::io::Write;
-use std::time::{Instant, Duration};
+use std::time::Duration;
 use timed_iterator::TimeIter;
 use poefetcher::PoeFetcher;
 
@@ -21,11 +19,12 @@ fn main() {
     let res: Vec<_> = fetcher.timed(Duration::from_millis(1000))
                             .enumerate()
                             .inspect(|&(ref i, ref site)| println!("Site {}: {:?}", i, site.change_id))
+                            .skip(10)
                             .map(|(_, site)| serde_json::from_reader::<&[u8],ApiSite>(site.body.as_slice()))
                             .flat_map(| s | s.unwrap().stashes.into_iter())
                             .flat_map(|stash| stash.items.into_iter())
                             .take(10000)
-                            .filter(| i | i.ilvl == 84)
+                            .filter(| i | i.ilvl < 80 && i.ilvl > 70)
                             .collect(); 
     println!("len: {}", res.len());
     
