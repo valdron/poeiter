@@ -3,7 +3,7 @@
 #[serde(deny_unknown_fields)]
 pub struct ApiSite {
     next_change_id: String,
-    pub stashes: Vec<ApiStash>
+    pub stashes: Vec<ApiStash>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -19,7 +19,7 @@ pub struct ApiStash {
     #[serde(rename = "stashType")]
     stash_type: String,
     pub items: Vec<ApiItem>,
-    public: bool
+    public: bool,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -69,7 +69,7 @@ pub struct ApiItem {
     th_race_reward: Option<bool>,
     prophecy_diff_text: Option<String>,
     prophecy_text: Option<String>,
-    is_relic: Option<bool>
+    is_relic: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -77,7 +77,7 @@ pub struct ApiItem {
 #[serde(rename_all = "camelCase")]
 pub struct ApiSocket {
     group: u8,
-    attr: String
+    attr: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -89,7 +89,7 @@ pub struct ApiProperties {
     display_mode: u8,
     #[serde(rename = "type")]
     prop_type: Option<u8>,
-    progress: Option<f32>
+    progress: Option<f32>,
 }
 #[cfg(test)]
 mod tests {
@@ -98,8 +98,8 @@ mod tests {
 
     const EXAMPLEJSONITEM: &str = r#"{"verified":false,"w":2,"h":4,"ilvl":71,"icon":"http:\/\/web.poecdn.com\/image\/Art\/2DItems\/Weapons\/TwoHandWeapons\/Bows\/SarkhamsReach.png?scale=1&w=2&h=4&v=f333c2e4005ee20a84270731baa5fa6a3","league":"Hardcore","id":"176b5e6f7af0a5bb4b48d7fdafa47501a179f4ea095815a58c82c4b5244b3cdb","sockets":[{"group":0,"attr":"D"}],"name":"<<set:MS>><<set:M>><<set:S>>Roth's Reach","typeLine":"Recurve Bow","identified":true,"corrupted":false,"lockedToCharacter":false,"note":"~price 10 exa","properties":[{"name":"Bow","values":[],"displayMode":0},{"name":"Quality","values":[["+17%",1]],"displayMode":0,"type":6},{"name":"Physical Damage","values":[["20-63",1]],"displayMode":0,"type":9},{"name":"Critical Strike Chance","values":[["6.50%",0]],"displayMode":0,"type":12},{"name":"Attacks per Second","values":[["1.31",1]],"displayMode":0,"type":13}],"requirements":[{"name":"Level","values":[["18",0]],"displayMode":0},{"name":"Dex","values":[["65",0]],"displayMode":1}],"explicitMods":["68% increased Physical Damage","34% increased Elemental Damage with Weapons","5% increased Attack Speed","Skills Chain +1 times","30% increased Projectile Speed"],"flavourText":["\"Exiled to the sea; what a joke. \r","I'm more free than I've ever been.\"\r","- Captain Weylam \"Rot-tooth\" Roth of the Black Crest"],"frameType":3,"x":10,"y":0,"inventoryId":"Stash1","socketedItems":[]}"#;
 
-    
-    
+
+
     #[test]
     fn apiitem_deserialization() {
         assert!(serde_json::from_str::<ApiItem>(EXAMPLEJSONITEM).is_ok())
