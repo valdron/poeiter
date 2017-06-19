@@ -1,6 +1,6 @@
 
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum StashType {
     NormalStash,
     PremiumStash,
@@ -8,13 +8,13 @@ enum StashType {
     EssenceStash,
     CurrencyStash,
     DivinationStash,
-    Other(String),
+    Unknown(String),
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 struct Sockets(Vec<(SocketColour, u8)>);
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum SocketColour {
     Red,
     Green,
@@ -23,7 +23,7 @@ enum SocketColour {
     Unknown(String),
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum PropertyColour {
     White,
     Blue,
@@ -34,7 +34,7 @@ enum PropertyColour {
     Unknown(u8),
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 enum FrameType {
     Normal,
     Magic,
@@ -93,7 +93,7 @@ impl From<String> for StashType {
             "EssenceStash" => EssenceStash,
             "CurrencyStash" => CurrencyStash,
             "DivinationStash" => DivinationStash,
-            _ => Other(s),
+            _ => Unknown(s),
         }
     }
 }
@@ -143,13 +143,16 @@ impl Sockets {
 #[cfg(test)]
 mod tests {
     use super::Sockets;
-    use super::SocketColour::*;
+    use super::SocketColour;
+    use super::FrameType;
+    use super::StashType;
 
- 
+
     fn examplesockets() -> Sockets {
+        use super::SocketColour::*;
         Sockets(vec![(Green, 0), (White, 0), (Red, 1), (Blue, 1), (Green, 1), (White, 2)])
     }
- 
+
     #[test]
     fn socket_links() {
         assert_eq!(examplesockets().max_link_count(), 3);
@@ -158,6 +161,71 @@ mod tests {
     #[test]
     fn socket_amount() {
         assert_eq!(examplesockets().socket_amount(), 6);
+    }
+
+    #[test]
+    fn into_frametype() {
+        let f: FrameType = 0u8.into();
+        assert_eq!(f, FrameType::Normal);
+
+        let f: FrameType = 1u8.into();
+        assert_eq!(f, FrameType::Magic);
+
+        let f: FrameType = 2u8.into();
+        assert_eq!(f, FrameType::Rare);
+
+        let f: FrameType = 3u8.into();
+        assert_eq!(f, FrameType::Unique);
+
+        let f: FrameType = 22u8.into();
+
+        assert!(if let FrameType::Unknown(_) = f {
+                    true
+                } else {
+                    false
+                });
+    }
+
+    #[test]
+    fn into_stashtype() {
+        let st: StashType = "NormalStash".to_owned().into();
+        assert_eq!(st, StashType::NormalStash);
+
+        let st: StashType = "DivinationStash".to_owned().into();
+        assert_eq!(st, StashType::DivinationStash);
+
+        let st: StashType = "hgaskdfjh".to_owned().into();
+        assert!( if let StashType::Unknown(_) = st {
+            true
+        } else {
+            false
+        });
+    }
+
+    #[test]
+    fn into_socketcolour() {
+        let sc: SocketColour = "D".to_owned().into();
+        assert_eq!(sc, SocketColour::Green );
+
+        let sc: SocketColour = "G".to_owned().into();
+        assert_eq!(sc, SocketColour::White );
+
+        let sc: SocketColour = "S".to_owned().into();
+        assert_eq!(sc, SocketColour::Red );
+
+        let sc: SocketColour = "y".to_owned().into();
+        assert!( if let SocketColour::Unknown(_) = sc {
+            true
+        } else {
+            false
+        });
+    }
+
+    #[test]
+    fn into_propertycolour() {
+        use super::PropertyColour;
+
+        let pc: PropertyColour = 
     }
 
 
