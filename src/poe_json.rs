@@ -70,7 +70,7 @@ pub struct ApiItem {
     prophecy_diff_text: Option<String>,
     prophecy_text: Option<String>,
     is_relic: Option<bool>,
-    cisRaceReward: Option<bool>
+    cis_race_reward: Option<bool>
 }
 
 #[derive(Serialize, Deserialize, Debug)]

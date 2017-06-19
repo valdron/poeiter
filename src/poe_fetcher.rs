@@ -59,13 +59,13 @@ impl Iterator for PoeFetcher {
 
                 match size {
                     Ok(x) if x == 0 => return None,
-                    Err(e) => return None,
+                    Err(_) => return None,
                     _ => {}
                 }
                 self.next_id = match extract_next_id(&result) {
                     Ok(x) => x,
 
-                    Err(e) => return None,
+                    Err(_) => return None,
                 };
 
                 if old_id == self.next_id {

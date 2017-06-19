@@ -19,18 +19,14 @@ use poe_fetcher::PoeFetcher;
 
 fn main() {
     let fetcher = PoeFetcher::new("http://www.pathofexile.com/api/public-stash-tabs".parse().unwrap(),Some("70269659-73958331-69202239-80449068-74825503".into()));
-    let res: Result<Vec<ApiSite>, _> = fetcher
+    let res: Vec<_> = fetcher
         .timed(Duration::from_millis(1000))
         .enumerate()
+        .take(5000)
         .inspect(|&(ref i, ref site)| println!("Site {}: {:?}", i, site.change_id))
-        .map(|(_, site)| serde_json::from_slice(&site.body))
+        .map(|(_, site)| serde_json::from_slice::<ApiSite>(&site.body))
+        .filter(|res| res.is_err())
         .collect();
     
-    if let Ok(v) = res {
-        println!("len: {}", v.len());
-    } else {
-        println!("len: {:?}", res);
-    }
-    
-
+    println!("{:#?}",res);
 }
