@@ -1,4 +1,14 @@
 
+use poe_json::ApiProperties;
+
+#[derive(Debug, PartialEq)]
+enum Requirement {
+    Str(u16),
+    Dex(u16),
+    Int(u16),
+    Lvl(u16),
+    Unknown,
+}
 
 #[derive(Debug, PartialEq)]
 enum StashType {
@@ -47,6 +57,30 @@ enum FrameType {
     Prophecy,
     Relic,
     Unknown(u8),
+}
+
+impl From<ApiProperties> for Requirement {
+    fn from(prop: ApiProperties) -> Self {
+        use self::Requirement::*;
+        if let Some(&(ref val, _)) = prop.values.get(0) {
+
+            let value: u16 = match val.parse() {
+                Ok(v) => v,
+                _ => return Unknown,
+            };
+
+            match prop.name.as_str() {
+                "Str" => Str(value),
+                "Dex" => Dex(value),
+                "Int" => Int(value),
+                "Level" => Lvl(value),
+                _ => Unknown,
+            }
+        } else {
+            Unknown
+        }
+
+    }
 }
 
 impl From<u8> for FrameType {
@@ -195,37 +229,65 @@ mod tests {
         assert_eq!(st, StashType::DivinationStash);
 
         let st: StashType = "hgaskdfjh".to_owned().into();
-        assert!( if let StashType::Unknown(_) = st {
-            true
-        } else {
-            false
-        });
+        assert!(if let StashType::Unknown(_) = st {
+                    true
+                } else {
+                    false
+                });
     }
 
     #[test]
     fn into_socketcolour() {
         let sc: SocketColour = "D".to_owned().into();
-        assert_eq!(sc, SocketColour::Green );
+        assert_eq!(sc, SocketColour::Green);
 
         let sc: SocketColour = "G".to_owned().into();
-        assert_eq!(sc, SocketColour::White );
+        assert_eq!(sc, SocketColour::White);
 
         let sc: SocketColour = "S".to_owned().into();
-        assert_eq!(sc, SocketColour::Red );
+        assert_eq!(sc, SocketColour::Red);
 
         let sc: SocketColour = "y".to_owned().into();
-        assert!( if let SocketColour::Unknown(_) = sc {
-            true
-        } else {
-            false
-        });
+        assert!(if let SocketColour::Unknown(_) = sc {
+                    true
+                } else {
+                    false
+                });
     }
 
     #[test]
     fn into_propertycolour() {
         use super::PropertyColour;
 
-        let pc: PropertyColour = 
+        let pc: PropertyColour = 0u8.into();
+        assert_eq!(pc, PropertyColour::White);
+
+        let pc: PropertyColour = 18u8.into();
+        assert!(if let PropertyColour::Unknown(_) = pc {
+                    true
+                } else {
+                    false
+                });
+    }
+
+    #[test]
+    fn into_requirement() {
+        use super::Requirement;
+        use poe_json::ApiProperties;
+
+        let p = ApiProperties {
+            name: "Int".into(),
+            values: vec![("123".into(), 0)],
+            display_mode: 1,
+            prop_type: None,
+            progress: None
+        };
+
+        let req: Requirement = p.into();
+
+        assert_eq!(req, Requirement::Int(123));
+
+
     }
 
 

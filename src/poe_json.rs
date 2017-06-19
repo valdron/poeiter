@@ -1,12 +1,12 @@
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 pub struct ApiSite {
     next_change_id: String,
     pub stashes: Vec<ApiStash>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
 pub struct ApiStash {
@@ -22,7 +22,7 @@ pub struct ApiStash {
     public: bool,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
 pub struct ApiItem {
@@ -30,27 +30,27 @@ pub struct ApiItem {
     w: u8,
     h: u8,
     pub ilvl: u8,
-    icon: String,
+    icon: String, // make check if is unided what unique it is
     league: String,
     id: String,
-    sockets: Vec<ApiSocket>,
-    name: String,
+    sockets: Vec<ApiSocket>, //done
+    name: String, 
     type_line: String,
     identified: bool,
     corrupted: bool,
     locked_to_character: bool,
-    note: Option<String>,
-    properties: Option<Vec<ApiProperties>>,
-    requirements: Option<Vec<ApiProperties>>,
+    note: Option<String>, 
+    pub properties: Option<Vec<ApiProperties>>,
+    pub requirements: Option<Vec<ApiProperties>>, //done
     explicit_mods: Option<Vec<String>>,
     implicit_mods: Option<Vec<String>>,
     enchant_mods: Option<Vec<String>>,
     crafted_mods: Option<Vec<String>>,
     flavour_text: Option<Vec<String>>,
-    frame_type: u8,
+    frame_type: u8, //done
     x: Option<u8>,
     y: Option<u8>,
-    inventory_id: Option<String>,
+    inventory_id: Option<String>, // make enum
     socketed_items: Vec<ApiItem>,
     additional_properties: Option<Vec<ApiProperties>>,
     sec_descr_text: Option<String>,
@@ -72,7 +72,7 @@ pub struct ApiItem {
     is_relic: Option<bool>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
 pub struct ApiSocket {
@@ -80,16 +80,16 @@ pub struct ApiSocket {
     attr: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 #[serde(rename_all = "camelCase")]
 pub struct ApiProperties {
-    name: String,
-    values: Vec<(String, u8)>,
-    display_mode: u8,
+    pub name: String,
+    pub values: Vec<(String, u8)>,
+    pub display_mode: u8,
     #[serde(rename = "type")]
-    prop_type: Option<u8>,
-    progress: Option<f32>,
+    pub prop_type: Option<u8>,
+    pub progress: Option<f32>,
 }
 #[cfg(test)]
 mod tests {
