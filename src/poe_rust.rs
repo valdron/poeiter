@@ -1,6 +1,72 @@
 
 use poe_json::ApiProperties;
 
+#[derive(Debug)]
+enum Item {
+    Currency{}, //make enum
+    Gear{}, // everything equippable (including Flask and Jewel)  
+    Gem{},
+    DivinationCard{},//make enum? or indicate by String?
+    Prophecy{}, //make enum? or indicate by String?
+    Map{},
+    MapFragments{}, //sacrifice ... (are normal items)
+    LeagueStone{}  //normal items aswell
+
+}
+
+#[derive(Debug)]
+enum CurrencyType {
+    ScrollFragment,
+    ScrollofWisdom,
+    PortalScroll,
+    TransmutationShard,
+    OrbofTransmutation,
+    OrbofAugmentation,
+    AlterationShard,
+    OrbofAlteration,
+    AlchemyShard,
+    OrbofAlchemy,
+    ExaltedOrb,
+    ChaosOrb,
+    RegalOrb,
+    OrbofChance,
+    VaalOrb,
+    MirrorofKalandra,
+    DivineOrb,
+    BlessedOrb,
+    OrbofScouring,
+    OrbofRegret,
+    JewelersOrb,
+    OrbofFusing,
+    ChromaticOrb,
+    ArmourersScrap,
+    BlacksmithsWhetstone,
+    CartographersChisel,
+    GemcuttersPrism,
+    GlassblowersBauble,
+    ApprenticeCartographersSextant,
+    JourneymanCartographersSextant,
+    MasterCartographersSextant,
+    UnshapingOrb,
+    ApprenticeCartographersSeal,
+    JourneymanCartographersSeal,
+    MasterCartographersSeal,
+    SilverCoin,
+    PerandusCoin,
+    SplinterofChayula,
+    BlessingofChayula,
+    SplinterofEsh,
+    BlessingofEsh,
+    SplinterofTul,
+    BlessingofTul,
+    SplinterofXoph,
+    BlessingofXoph,
+    SplinterofUulNetol,
+    BlessingofUulNetol,
+    StackedDeck,
+    AlbinoRhoaFeather,
+}
+
 #[derive(Debug, PartialEq)]
 enum Requirement {
     Str(u16),

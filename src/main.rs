@@ -18,7 +18,17 @@ use timed_iterator::TimeIter;
 use poe_fetcher::PoeFetcher;
 
 fn main() {
-    let fetcher = PoeFetcher::new("http://www.pathofexile.com/api/public-stash-tabs".parse().unwrap(),Some("70269659-73958331-69202239-80449068-74825503".into()));
+
+    let cl = reqwest::Client::new().expect("client could not be created");
+    let res = cl.get("http://api.poe.ninja/api/Data/GetStats").send().expect("get request not successful");
+    let val: serde_json::Value = serde_json::from_reader(res).expect("parse error");
+
+    let curr_change_id: String = match *val.get("nextChangeId").unwrap() {
+        serde_json::Value::String(ref s) => s.clone(),
+        _ => panic!("non string value") 
+    };
+
+    let fetcher = PoeFetcher::new("http://www.pathofexile.com/api/public-stash-tabs".parse().unwrap(),Some(curr_change_id));
     let res: Vec<_> = fetcher
         .timed(Duration::from_millis(1000))
         .enumerate()
