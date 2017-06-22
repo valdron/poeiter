@@ -1,71 +1,23 @@
 
 use poe_json::ApiProperties;
+use poe_item_types::CurrencyType;
 
 #[derive(Debug)]
-enum Item {
-    Currency{}, //make enum
-    Gear{}, // everything equippable (including Flask and Jewel)  
-    Gem{},
-    DivinationCard{},//make enum? or indicate by String?
-    Prophecy{}, //make enum? or indicate by String?
-    Map{},
+enum ItemSpecifics {
+    Currency { c_type: CurrencyType, stack_size: u16}, //make enum
+    Gear{quality: u8,}, // everything equippable with sockets
+    Jewel{}, // enum for suff/prefix or (Option<Jewelmod>, Option<JewelMod>)
+    Flask{quality: u8, f_type: Flasktype}, // Flasktype should be enum for lifeflask with tier
+    Misc{},  
+    Gem{ quality: u8, level: u8, },
+    DivinationCard{ name: String, stack_size: u16},//make enum? or indicate by String?
+    Prophecy{name: String,}, //make enum? or indicate by String?
+    Map{name: String, tier: u8, quality: u8},
     MapFragments{}, //sacrifice ... (are normal items)
-    LeagueStone{}  //normal items aswell
+    LeagueStone{ls_type: LeagueStoneType, mods: Vec<LeagueStoneMod>}  //normal items aswell
 
 }
 
-#[derive(Debug)]
-enum CurrencyType {
-    ScrollFragment,
-    ScrollofWisdom,
-    PortalScroll,
-    TransmutationShard,
-    OrbofTransmutation,
-    OrbofAugmentation,
-    AlterationShard,
-    OrbofAlteration,
-    AlchemyShard,
-    OrbofAlchemy,
-    ExaltedOrb,
-    ChaosOrb,
-    RegalOrb,
-    OrbofChance,
-    VaalOrb,
-    MirrorofKalandra,
-    DivineOrb,
-    BlessedOrb,
-    OrbofScouring,
-    OrbofRegret,
-    JewelersOrb,
-    OrbofFusing,
-    ChromaticOrb,
-    ArmourersScrap,
-    BlacksmithsWhetstone,
-    CartographersChisel,
-    GemcuttersPrism,
-    GlassblowersBauble,
-    ApprenticeCartographersSextant,
-    JourneymanCartographersSextant,
-    MasterCartographersSextant,
-    UnshapingOrb,
-    ApprenticeCartographersSeal,
-    JourneymanCartographersSeal,
-    MasterCartographersSeal,
-    SilverCoin,
-    PerandusCoin,
-    SplinterofChayula,
-    BlessingofChayula,
-    SplinterofEsh,
-    BlessingofEsh,
-    SplinterofTul,
-    BlessingofTul,
-    SplinterofXoph,
-    BlessingofXoph,
-    SplinterofUulNetol,
-    BlessingofUulNetol,
-    StackedDeck,
-    AlbinoRhoaFeather,
-}
 
 #[derive(Debug, PartialEq)]
 enum Requirement {

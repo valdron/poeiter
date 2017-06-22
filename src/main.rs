@@ -10,6 +10,7 @@ extern crate serde_derive;
 mod poe_json;
 mod poe_rust;
 mod poe_fetcher;
+mod poe_item_types;
 
 use poe_json::ApiSite;
 
