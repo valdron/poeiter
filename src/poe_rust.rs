@@ -2,21 +2,21 @@
 use poe_json::ApiProperties;
 use poe_item_types::CurrencyType;
 
-#[derive(Debug)]
-enum ItemSpecifics {
-    Currency { c_type: CurrencyType, stack_size: u16}, //make enum
-    Gear{quality: u8,}, // everything equippable with sockets
-    Jewel{}, // enum for suff/prefix or (Option<Jewelmod>, Option<JewelMod>)
-    Flask{quality: u8, f_type: Flasktype}, // Flasktype should be enum for lifeflask with tier
-    Misc{},  
-    Gem{ quality: u8, level: u8, },
-    DivinationCard{ name: String, stack_size: u16},//make enum? or indicate by String?
-    Prophecy{name: String,}, //make enum? or indicate by String?
-    Map{name: String, tier: u8, quality: u8},
-    MapFragments{}, //sacrifice ... (are normal items)
-    LeagueStone{ls_type: LeagueStoneType, mods: Vec<LeagueStoneMod>}  //normal items aswell
+// #[derive(Debug)]
+// enum ItemSpecifics {
+//     Currency { c_type: CurrencyType, stack_size: u16}, //make enum
+//     Gear{quality: u8, mods: Vec<ItemMod>, def: Vec<Defences>}, // everything equippable with sockets
+//     Jewel{j_type: JewelType, mods: Vec<JewelMod>}, // enum for suff/prefix or (Option<Jewelmod>, Option<JewelMod>)
+//     Flask{quality: u8, f_type: Flasktype}, // Flasktype should be enum for lifeflask with tier
+//     Misc{m_type: MiscType, mods: Vec<ItemMod>},  
+//     Gem{ quality: u8, level: u8, },
+//     DivinationCard{ name: String, stack_size: u16},//make enum? or indicate by String?
+//     Prophecy{name: String,}, //make enum? or indicate by String?
+//     Map{name: String, tier: u8, quality: u8, map_mods: Vec<MapMods>},
+//     MapFragments{frag_type: MapFragmentType}, //sacrifice ... (are normal items)
+//     LeagueStone{ls_type: LeagueStoneType, mods: Vec<LeagueStoneMod>}  //normal items aswell
 
-}
+// }
 
 
 #[derive(Debug, PartialEq)]

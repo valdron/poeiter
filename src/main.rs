@@ -6,6 +6,8 @@ extern crate serde;
 extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
+#[macro_use]
+extern crate lazy_static;
 
 mod poe_json;
 mod poe_rust;
@@ -36,7 +38,10 @@ fn main() {
         .take(5000)
         .inspect(|&(ref i, ref site)| println!("Site {}: {:?}", i, site.change_id))
         .map(|(_, site)| serde_json::from_slice::<ApiSite>(&site.body))
-        .filter(|res| res.is_err())
+        .filter(|res| res.is_ok())
+        .map(|res| res.unwrap())
+        .flat_map(|site| site.stashes)
+        .flat_map(||)
         .collect();
     
     println!("{:#?}",res);
