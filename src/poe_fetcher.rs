@@ -34,10 +34,10 @@ impl Iterator for PoeFetcher {
     type Item = PoeSite;
     fn next(&mut self) -> Option<Self::Item> {
 
-        self.url
-            .query_pairs_mut()
-            .clear()
-            .append_pair("id", &self.next_id);
+        self.url.query_pairs_mut().clear().append_pair(
+            "id",
+            &self.next_id,
+        );
 
         let mut headers = Headers::new();
         headers.set(ContentEncoding(vec![Encoding::Gzip]));
@@ -73,9 +73,9 @@ impl Iterator for PoeFetcher {
                 }
 
                 Some(PoeSite {
-                         change_id: old_id,
-                         body: result,
-                     })
+                    change_id: old_id,
+                    body: result,
+                })
             }
 
             _ => None,

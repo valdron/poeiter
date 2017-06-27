@@ -34,12 +34,12 @@ pub struct ApiItem {
     league: String,
     id: String,
     sockets: Vec<ApiSocket>, //done
-    name: String, 
-    type_line: String,
+    pub name: String,
+    pub type_line: String,
     identified: bool,
     corrupted: bool,
     locked_to_character: bool,
-    note: Option<String>, 
+    note: Option<String>,
     pub properties: Option<Vec<ApiProperties>>,
     pub requirements: Option<Vec<ApiProperties>>, //done
     explicit_mods: Option<Vec<String>>,
@@ -47,7 +47,7 @@ pub struct ApiItem {
     enchant_mods: Option<Vec<String>>,
     crafted_mods: Option<Vec<String>>,
     flavour_text: Option<Vec<String>>,
-    frame_type: u8, //done
+    pub frame_type: u8, //done
     x: Option<u8>,
     y: Option<u8>,
     inventory_id: Option<String>, // make enum
@@ -70,7 +70,7 @@ pub struct ApiItem {
     prophecy_diff_text: Option<String>,
     prophecy_text: Option<String>,
     is_relic: Option<bool>,
-    cis_race_reward: Option<bool>
+    cis_race_reward: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

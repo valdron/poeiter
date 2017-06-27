@@ -1,6 +1,6 @@
 
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum CurrencyType {
     ScrollFragment,
     ScrollofWisdom,
@@ -82,14 +82,14 @@ impl From<String> for CurrencyType {
                 m.insert("Blessed Orb",  BlessedOrb);
                 m.insert("Orb of Scouring",  OrbofScouring);
                 m.insert("Orb of Regret",  OrbofRegret);
-                m.insert("Jewelers Orb",  JewelersOrb);
+                m.insert("Jeweller's Orb",  JewelersOrb);
                 m.insert("Orb of Fusing",  OrbofFusing);
                 m.insert("Chromatic Orb",  ChromaticOrb);
-                m.insert("Armourers Scrap",  ArmourersScrap);
+                m.insert("Armourer's Scrap",  ArmourersScrap);
                 m.insert("Blacksmith's Whetstone",  BlacksmithsWhetstone);
                 m.insert("Cartographer's Chisel", CartographersChisel);
                 m.insert("Gemcutter's Prism",  GemcuttersPrism);
-                m.insert("Glasblower's Bauble",  GlassblowersBauble);
+                m.insert("Glassblower's Bauble",  GlassblowersBauble);
                 m.insert("Apprentice Cartographer's Sextant",  ApprenticeCartographersSextant);
                 m.insert("Journeyman Cartographer's Sextant",  JourneymanCartographersSextant);
                 m.insert("Master Cartographer's Sextant",  MasterCartographersSextant);
@@ -114,7 +114,24 @@ impl From<String> for CurrencyType {
                 m
             };
         }
+        s.trim();
         *CURRMAP.get(s.as_str()).unwrap()
+    }
+}
 
-        }
+#[cfg(test)]
+mod tests {
+    use super::CurrencyType;
+
+    #[test]
+    fn into_currencytype() {
+        let ct: CurrencyType = "Regal Orb".to_owned().into();
+        assert_eq!(ct, CurrencyType::RegalOrb);
+
+        let ct: CurrencyType = "Armourer's Scrap".to_owned().into();
+        assert_eq!(ct, CurrencyType::ArmourersScrap);
+
+        let ct: CurrencyType = "Chaos Orb".to_owned().into();
+        assert_eq!(ct, CurrencyType::ChaosOrb);
+    }
 }
