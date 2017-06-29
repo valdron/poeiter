@@ -1,4 +1,6 @@
 
+use std::convert::{TryFrom,TryInto};
+use errors::*;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum CurrencyType {
@@ -51,11 +53,14 @@ pub enum CurrencyType {
     BlessingofUulNetol,
     StackedDeck,
     AlbinoRhoaFeather,
+    RemnantofCorruption,
+    Essence(Essence)
 }
 
 
-impl From<String> for CurrencyType {
-    fn from(s: String) -> Self {
+impl TryFrom<String> for CurrencyType {
+    type Error = Error;
+    fn try_from(s: String) -> Result<Self> {
         use self::CurrencyType::*;
         use std::collections::HashMap;
 
@@ -111,27 +116,146 @@ impl From<String> for CurrencyType {
                 m.insert("Blessing of Uul-Netol",  BlessingofUulNetol);
                 m.insert("Stacked Deck",  StackedDeck);
                 m.insert("Albino Rhoa Feather",  AlbinoRhoaFeather);
+                m.insert("Remnant of Corruption", RemnantofCorruption);
                 m
             };
         }
-        s.trim();
-        *CURRMAP.get(s.as_str()).unwrap()
+
+        Ok(
+            match CURRMAP.get(s.as_str()) {
+                Some(ct) => ct.clone(),
+                None => {
+                    if s.contains("Essence") {
+                        Essence(s.as_str().try_into()?)
+                    } else {
+                        bail!("Unknown Currencytype \'{}\'", s)
+                    }
+                }
+            }
+        )
+    }
+}
+
+#[derive(Debug,Clone,Copy, PartialEq)]
+pub enum Essence {
+    Greed(EssenceTier),
+    Hatred(EssenceTier),
+    Woe(EssenceTier),
+    Contempt(EssenceTier),
+    Sorrow(EssenceTier),
+    Anger(EssenceTier),
+    Torment(EssenceTier),
+    Fear(EssenceTier),
+    Suffering(EssenceTier),
+    Rage(EssenceTier),
+    Wrath(EssenceTier),
+    Doubt(EssenceTier),
+    Anguish(EssenceTier),
+    Loathing(EssenceTier),
+    Spite(EssenceTier),
+    Zeal(EssenceTier),
+    Misery(EssenceTier),
+    Dread(EssenceTier),
+    Scorn(EssenceTier),
+    Envy(EssenceTier),
+    Hysteria,
+    Insanity,
+    Horror,
+    Delirium,
+}
+
+impl<'a> TryFrom<&'a str> for Essence {
+    type Error = Error;
+    fn try_from(s: &str) -> Result<Self> {
+        use self::Essence::*;
+        let tier: Result<EssenceTier> = s.split_whitespace().next().expect("unreachable!").try_into();
+        Ok(
+            match s {
+                s if s.contains("Greed") => Greed(tier?),
+                s if s.contains("Hatred") => Hatred(tier?),
+                s if s.contains("Woe") => Woe(tier?),
+                s if s.contains("Contempt") => Contempt(tier?),
+                s if s.contains("Sorrow") => Sorrow(tier?),
+                s if s.contains("Anger") => Anger(tier?),
+                s if s.contains("Torment") => Torment(tier?),
+                s if s.contains("Fear") => Fear(tier?),
+                s if s.contains("Suffering") => Suffering(tier?),
+                s if s.contains("Rage") => Rage(tier?),
+                s if s.contains("Wrath") => Wrath(tier?),
+                s if s.contains("Doubt") => Doubt(tier?),
+                s if s.contains("Anguish") => Anguish(tier?),
+                s if s.contains("Loathing") => Loathing(tier?),
+                s if s.contains("Spite") => Spite(tier?),
+                s if s.contains("Zeal") => Zeal(tier?),
+                s if s.contains("Misery") => Misery(tier?),
+                s if s.contains("Dread") => Dread(tier?),
+                s if s.contains("Scorn") => Scorn(tier?),
+                s if s.contains("Envy") => Envy(tier?),
+                s if s.contains("Hysteria") => Hysteria,
+                s if s.contains("Insanity") => Insanity,
+                s if s.contains("Horror") => Horror,
+                s if s.contains("Delirium") => Delirium,
+                _ => bail!("Unknown EssenceType: \'{}\'", s)
+            }
+        )
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum EssenceTier{
+    Whispering,
+    Muttering,
+    Weeping,
+    Wailing,
+    Screaming,
+    Shrieking,
+    Deafening
+}
+
+impl<'a> TryFrom<&'a str> for EssenceTier {
+    type Error = Error;
+    fn try_from(s: &str) -> Result<Self> {
+        use self::EssenceTier::*;
+        Ok(
+            match s {
+                "Whispering" => Whispering,
+                "Muttering" => Muttering,
+                "Weeping" => Weeping,
+                "Wailing" => Wailing,
+                "Screaming" => Screaming,
+                "Shrieking" => Shrieking,
+                "Deafening" => Deafening,
+                _ => bail!("Unknown EssenceTier \'{}\'", s)
+            }
+        )
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::CurrencyType;
+    use std::convert::TryInto;
+    use errors::*;
 
     #[test]
     fn into_currencytype() {
-        let ct: CurrencyType = "Regal Orb".to_owned().into();
-        assert_eq!(ct, CurrencyType::RegalOrb);
+        let ct: Result<CurrencyType> = "Regal Orb".to_owned().try_into();
+        println!("{:?}", ct);
+        assert!(match ct {
+            Ok(c) => c == CurrencyType::RegalOrb,
+            _ => false
+        });
 
-        let ct: CurrencyType = "Armourer's Scrap".to_owned().into();
-        assert_eq!(ct, CurrencyType::ArmourersScrap);
+        let ct: Result<CurrencyType> = "Armourer's Scrap".to_owned().try_into();
+        assert!(match ct {
+            Ok(c) => c == CurrencyType::ArmourersScrap,
+            _ => false
+        });
 
-        let ct: CurrencyType = "Chaos Orb".to_owned().into();
-        assert_eq!(ct, CurrencyType::ChaosOrb);
+        let ct: Result<CurrencyType> = "Chaos Orb".to_owned().try_into();
+        assert!(match ct {
+            Ok(c) => c == CurrencyType::ChaosOrb,
+            _ => false
+        });
     }
 }

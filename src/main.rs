@@ -24,10 +24,7 @@ mod errors {
                 description("invalid requirment name")
                 display("invalid requirement name: {}", s)
             }
-            RequirementArrayEmpty {
-                description("Requirement Array Empty")
-                display("Requirement Array Empty")
-            }
+            RequirementArrayEmpty 
             InvalidRequirementValue(s: String) {
                 description("Invalid Requirement Value")
                 display("Invalid Requirement Value: {}", s)
@@ -86,17 +83,21 @@ fn main() {
         .flat_map(|site| site.stashes.into_iter())
         .flat_map(|stash| stash.items.into_iter())
         .filter(|item| {
-            let ft: Result<FrameType> = item.frame_type.try_into(); 
+            let ft: Result<FrameType> = item.frame_type.try_into();
             if let Ok(f) = ft {
                 f == FrameType::Currency
             } else {
                 false
             }
         })
-        .take(1000)
-        .inspect(|i| println!("typeline: {}", i.type_line))
-        .map(|itm| -> CurrencyType { itm.type_line.into() })
+        .take(10000)
+        .map(|itm| -> Result<CurrencyType> { itm.type_line.try_into() })
+        .filter(|res| res.is_err())
         .collect();
 
-    println!("{:#?}", res);
+    for r in res.iter() {
+        if let Err(ref e) = *r {
+            println!("{}", e.description()) 
+        }
+    }
 }

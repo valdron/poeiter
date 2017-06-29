@@ -2,16 +2,16 @@
 use poe_json::ApiProperties;
 use poe_item_types::CurrencyType;
 use std::convert::{TryFrom, TryInto};
-use std::fmt::{Display, self};
+use std::fmt::{self, Display};
 
 
 
 use errors::*;
 
-// #[derive(Debug)]
-// enum ItemSpecifics {
-//     Currency { c_type: CurrencyType, stack_size: u16}, //make enum
-//     Gear{quality: u8, mods: Vec<ItemMod>, def: Vec<Defences>}, // everything equippable with sockets
+#[derive(Debug)]
+enum ItemSpecifics {
+    Currency { c_type: CurrencyType, stack_size: u16}, //make enum
+//     Gear{g_type: GearType, quality: u8, mods: Vec<ItemMod>, def: Vec<Defences>}, // everything equippable with sockets
 //     Jewel{j_type: JewelType, mods: Vec<JewelMod>}, // enum for suff/prefix or (Option<Jewelmod>, Option<JewelMod>)
 //     Flask{quality: u8, f_type: Flasktype}, // Flasktype should be enum for lifeflask with tier
 //     Misc{m_type: MiscType, mods: Vec<ItemMod>},
@@ -22,7 +22,7 @@ use errors::*;
 //     MapFragments{frag_type: MapFragmentType}, //sacrifice ... (are normal items)
 //     LeagueStone{ls_type: LeagueStoneType, mods: Vec<LeagueStoneMod>}  //normal items aswell
 
-// }
+}
 
 
 #[derive(Debug, PartialEq)]
@@ -83,25 +83,22 @@ impl TryFrom<ApiProperties> for Requirement {
     type Error = Error;
     fn try_from(prop: ApiProperties) -> Result<Self> {
         use self::Requirement::*;
-        Ok(
-            if let Some(&(ref val, _)) = prop.values.get(0) {
+        Ok(if let Some(&(ref val, _)) = prop.values.get(0) {
 
-                let value: u16 = val.parse()
-                                    .chain_err(|| 
-                                        ErrorKind::InvalidRequirementValue(val.clone())
-                                    )?;
+            let value: u16 = val.parse().chain_err(|| {
+                ErrorKind::InvalidRequirementValue(val.clone())
+            })?;
 
-                match prop.name.as_str() {
-                    "Str" => Str(value),
-                    "Dex" => Dex(value),
-                    "Int" => Int(value),
-                    "Level" => Lvl(value),
-                    _ => bail!(ErrorKind::InvalidRequirementName(prop.name)),
-                }
-            } else {
-                bail!(ErrorKind::RequirementArrayEmpty)
+            match prop.name.as_str() {
+                "Str" => Str(value),
+                "Dex" => Dex(value),
+                "Int" => Int(value),
+                "Level" => Lvl(value),
+                _ => bail!(ErrorKind::InvalidRequirementName(prop.name)),
             }
-        )
+        } else {
+            bail!(ErrorKind::RequirementArrayEmpty)
+        })
 
     }
 }
@@ -110,21 +107,19 @@ impl TryFrom<u8> for FrameType {
     type Error = Error;
     fn try_from(number: u8) -> Result<Self> {
         use self::FrameType::*;
-        Ok(
-            match number {
-                0 => Normal,
-                1 => Magic,
-                2 => Rare,
-                3 => Unique,
-                4 => Gem,
-                5 => Currency,
-                6 => DivinationCard,
-                7 => QuestItem,
-                8 => Prophecy,
-                9 => Relic,
-                _  => bail!("Unknown Frametype: {}", number)
-            }
-        )
+        Ok(match number {
+            0 => Normal,
+            1 => Magic,
+            2 => Rare,
+            3 => Unique,
+            4 => Gem,
+            5 => Currency,
+            6 => DivinationCard,
+            7 => QuestItem,
+            8 => Prophecy,
+            9 => Relic,
+            _ => bail!("Unknown Frametype: {}", number),
+        })
     }
 }
 
@@ -132,17 +127,15 @@ impl TryFrom<u8> for PropertyColour {
     type Error = Error;
     fn try_from(number: u8) -> Result<Self> {
         use self::PropertyColour::*;
-        Ok(
-            match number {
-                0 => White,
-                1 => Blue,
-                2 => Fire,
-                3 => Cold,
-                4 => Lightning,
-                5 => Chaos,
-                _ => bail!("Unkown PropertyColour {}", number),
-            }
-        )
+        Ok(match number {
+            0 => White,
+            1 => Blue,
+            2 => Fire,
+            3 => Cold,
+            4 => Lightning,
+            5 => Chaos,
+            _ => bail!("Unkown PropertyColour {}", number),
+        })
     }
 }
 
@@ -150,17 +143,15 @@ impl TryFrom<String> for StashType {
     type Error = Error;
     fn try_from(s: String) -> Result<Self> {
         use self::StashType::*;
-        Ok(    
-            match s.as_str() {
-                "NormalStash" => NormalStash,
-                "PremiumStash" => PremiumStash,
-                "QuadStash" => QuadStash,
-                "EssenceStash" => EssenceStash,
-                "CurrencyStash" => CurrencyStash,
-                "DivinationStash" => DivinationStash,
-                _ => bail!("Unkown Stashtype: {}", s),
-            }
-        )
+        Ok(match s.as_str() {
+            "NormalStash" => NormalStash,
+            "PremiumStash" => PremiumStash,
+            "QuadStash" => QuadStash,
+            "EssenceStash" => EssenceStash,
+            "CurrencyStash" => CurrencyStash,
+            "DivinationStash" => DivinationStash,
+            _ => bail!("Unkown Stashtype: {}", s),
+        })
     }
 }
 
@@ -168,15 +159,13 @@ impl TryFrom<String> for SocketColour {
     type Error = Error;
     fn try_from(s: String) -> Result<Self> {
         use self::SocketColour::*;
-        Ok(
-            match s.as_ref() {
-                "D" => Green,
-                "S" => Red,
-                "I" => Blue,
-                "G" => White,
-                _ => bail!("Unknown SocketColour {}", s),
-            }
-        )
+        Ok(match s.as_ref() {
+            "D" => Green,
+            "S" => Red,
+            "I" => Blue,
+            "G" => White,
+            _ => bail!("Unknown SocketColour {}", s),
+        })
     }
 }
 
@@ -184,18 +173,12 @@ impl TryFrom<Vec<(u8, String)>> for Sockets {
     type Error = Error;
     fn try_from(v: Vec<(u8, String)>) -> Result<Self> {
         let res: Result<Vec<_>> = v.into_iter()
-                                   .map(|(grp, col)| {
-                                       match col.try_into() {
-                                           Ok(c) => Ok((c, grp)),
-                                           Err(e) => Err(e)
-                                       }
-                                   })
-                                   .collect();
-        Ok(
-            Sockets(
-                res.chain_err(|| "Couldn't parse Sockets")?
-                )
-        )
+            .map(|(grp, col)| match col.try_into() {
+                Ok(c) => Ok((c, grp)),
+                Err(e) => Err(e),
+            })
+            .collect();
+        Ok(Sockets(res.chain_err(|| "Couldn't parse Sockets")?))
     }
 }
 
@@ -265,36 +248,28 @@ mod tests {
     #[test]
     fn into_frametype() {
         let f: Result<FrameType> = 0u8.try_into();
-        assert!(
-            match f {
-                Ok(ft) => ft == FrameType::Normal,
-                _ => false
-            }
-        );
+        assert!(match f {
+            Ok(ft) => ft == FrameType::Normal,
+            _ => false,
+        });
 
         let f: Result<FrameType> = 1u8.try_into();
-        assert!(
-            match f {
-                Ok(ft) => ft == FrameType::Magic,
-                _ => false
-            }
-        );
+        assert!(match f {
+            Ok(ft) => ft == FrameType::Magic,
+            _ => false,
+        });
 
         let f: Result<FrameType> = 2u8.try_into();
-        assert!(
-            match f {
-                Ok(ft) => ft == FrameType::Rare,
-                _ => false
-            }
-        );
+        assert!(match f {
+            Ok(ft) => ft == FrameType::Rare,
+            _ => false,
+        });
 
         let f: Result<FrameType> = 3u8.try_into();
-        assert!(
-            match f {
-                Ok(ft) => ft == FrameType::Unique,
-                _ => false
-            }
-        );
+        assert!(match f {
+            Ok(ft) => ft == FrameType::Unique,
+            _ => false,
+        });
 
         let f: Result<FrameType> = 22u8.try_into();
         assert!(f.is_err());
@@ -303,20 +278,16 @@ mod tests {
     #[test]
     fn into_stashtype() {
         let st: Result<StashType> = "NormalStash".to_owned().try_into();
-        assert!(
-            match st {
-                Ok(s) => s == StashType::NormalStash,
-                _ => false
-            }
-        );
+        assert!(match st {
+            Ok(s) => s == StashType::NormalStash,
+            _ => false,
+        });
 
         let st: Result<StashType> = "DivinationStash".to_owned().try_into();
-        assert!(
-            match st {
-                Ok(s) => s == StashType::DivinationStash,
-                _ => false
-            }
-        );
+        assert!(match st {
+            Ok(s) => s == StashType::DivinationStash,
+            _ => false,
+        });
 
         let st: Result<StashType> = "hgaskdfjh".to_owned().try_into();
         assert!(st.is_err());
@@ -325,29 +296,23 @@ mod tests {
     #[test]
     fn into_socketcolour() {
         let sc: Result<SocketColour> = "D".to_owned().try_into();
-        assert!(
-            match sc {
-                Ok(c) => c == SocketColour::Green,
-                _ => false
-            }
-        );
-            
+        assert!(match sc {
+            Ok(c) => c == SocketColour::Green,
+            _ => false,
+        });
+
 
         let sc: Result<SocketColour> = "G".to_owned().try_into();
-        assert!(
-            match sc {
-                Ok(c) => c == SocketColour::White,
-                _ => false
-            }
-        );
+        assert!(match sc {
+            Ok(c) => c == SocketColour::White,
+            _ => false,
+        });
 
         let sc: Result<SocketColour> = "S".to_owned().try_into();
-        assert!(
-            match sc {
-                Ok(c) => c == SocketColour::Red,
-                _ => false
-            }
-        );
+        assert!(match sc {
+            Ok(c) => c == SocketColour::Red,
+            _ => false,
+        });
 
         let sc: Result<SocketColour> = "y".to_owned().try_into();
         assert!(sc.is_err());
@@ -358,12 +323,10 @@ mod tests {
         use super::PropertyColour;
 
         let pc: Result<PropertyColour> = 0u8.try_into();
-        assert!(
-            match pc {
-                Ok(p) => p == PropertyColour::White,
-                _ => false
-            }
-        );
+        assert!(match pc {
+            Ok(p) => p == PropertyColour::White,
+            _ => false,
+        });
 
         let pc: Result<PropertyColour> = 18u8.try_into();
         assert!(pc.is_err());
@@ -384,12 +347,10 @@ mod tests {
 
         let req: Result<Requirement> = p.try_into();
 
-        assert!(
-            match req {
-                Ok(r) => r == Requirement::Int(123),
-                _ => false
-            }
-        );
+        assert!(match req {
+            Ok(r) => r == Requirement::Int(123),
+            _ => false,
+        });
 
     }
 
