@@ -1,23 +1,35 @@
 
-use poe_json::ApiProperties;
+use poe_json::{ApiProperties,ApiItem};
 use poe_item_types::CurrencyType;
 use std::convert::{TryFrom, TryInto};
-use std::fmt::{self, Display};
 
 
 
 use errors::*;
 
 #[derive(Debug)]
+struct PoeItem {
+    id: String,
+    league: String, // change to enum?
+    specifics: ItemSpecifics,
+    reqs: Vec<Requirement>,
+    frame_type: FrameType,
+    identified: bool,
+    corrupted: bool,
+    properties: ApiProperties,
+    duplicated: Option<bool>,
+}
+
+#[derive(Debug)]
 enum ItemSpecifics {
-    Currency { c_type: CurrencyType, stack_size: u16}, //make enum
-//     Gear{g_type: GearType, quality: u8, mods: Vec<ItemMod>, def: Vec<Defences>}, // everything equippable with sockets
-//     Jewel{j_type: JewelType, mods: Vec<JewelMod>}, // enum for suff/prefix or (Option<Jewelmod>, Option<JewelMod>)
+    Currency { c_type: CurrencyType, stack_size: u16}, //Frametype = Currency
+//     Gear{g_type: GearType, quality: u8, mods: Vec<ItemMod>, def: Vec<Defences>, sockets: Sockets}, // everything equippable with sockets
+//     Jewel{j_type: JewelType, mods: Vec<JewelMod>}, // enum for suff/prefix or (Option<Jewelmod>, Option<JewelMod>) // typeLine contains Jewel
 //     Flask{quality: u8, f_type: Flasktype}, // Flasktype should be enum for lifeflask with tier
 //     Misc{m_type: MiscType, mods: Vec<ItemMod>},
-//     Gem{ quality: u8, level: u8, },
-//     DivinationCard{ name: String, stack_size: u16},//make enum? or indicate by String?
-//     Prophecy{name: String,}, //make enum? or indicate by String?
+     Gem{name: String, quality: u8, level: u8, }, // frametype = GEM
+     DivinationCard{ name: String, stack_size: u16},// frametype = DivinantionCard
+     Prophecy{name: String,}, //make enum? or indicate by String?
 //     Map{name: String, tier: u8, quality: u8, map_mods: Vec<MapMods>},
 //     MapFragments{frag_type: MapFragmentType}, //sacrifice ... (are normal items)
 //     LeagueStone{ls_type: LeagueStoneType, mods: Vec<LeagueStoneMod>}  //normal items aswell
@@ -77,6 +89,13 @@ pub enum FrameType {
     QuestItem,
     Prophecy,
     Relic,
+}
+
+impl TryFrom<ApiItem> for PoeItem {
+    type Error = Error;
+    fn try_from(apiitm: ApiItem) -> Result<Self> {
+        
+    }
 }
 
 impl TryFrom<ApiProperties> for Requirement {
